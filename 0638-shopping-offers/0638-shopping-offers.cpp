@@ -1,45 +1,52 @@
 class Solution {
-public:
-    
-    bool canApplyOffer(vector<int>& offer, vector<int> need)
-    {
-        for(int i = 0; i < need.size(); i++)
+    int solve(int ind, vector<int> &cost, vector<int> &req, vector<vector<int>> &sp, map<vector<int>,int> &dp)
+    {   
+        int n = cost.size();
+        if(ind >= n) return 0;
+        
+        // if(dp[ind][req[ind]] != -1)  return dp[ind][req[ind]];
+        if(dp.count(req)) return dp[req];
+        
+        int take = 1e9, skip = 0;
+        
+        for(auto &x: sp)
         {
-            if(need[i] >= offer[i]) continue;
-            return 0;
-        }
-
-        return 1;
-    }
-
-    int MinPrice(vector<int> needs, vector<int>& price, vector<vector<int>>& special, map<vector<int>, int>& dp)
-    {
-        if(dp.find(needs) != dp.end()) return dp[needs];
-
-        int ans = 0;
-        //without-any-offer
-        for(int i = 0; i < needs.size(); i++) ans += needs[i] * price[i];
-
-        //checking offers
-        for(auto x : special)
-        {
-            if(!canApplyOffer(x, needs)) continue;
+            int temp =-1;
+            int s = 0;
+           for(int i=0;i<n;i++)
+           {
+               if(req[i] < x[i])    s=1;   
+           }
             
-            int cost = x[x.size() - 1];
-
-            for(int i = 0; i < needs.size(); i++) needs[i] -= x[i];
-
-            ans = min(ans, cost + MinPrice(needs, price, special, dp));
-
-            for(int i = 0; i < needs.size(); i++) needs[i] += x[i];
+            if(!s)
+            {
+                for(int i=0;i<n;i++)    req[i] -= x[i];
+                
+                if(req[ind] == 0)
+                temp = x[n] + solve(ind+1,cost,req,sp,dp);
+                else
+                temp = x[n] + solve(ind,cost,req,sp,dp);
+                
+                for(int i=0;i<n;i++)    req[i] += x[i];
+            }
+            
+            if(temp != -1)
+            take = min(take,temp);
         }
-
-        return dp[needs] = ans;
+        
+        //if not taking the sp price
+        long long price = cost[ind] * req[ind];
+        skip = price + solve(ind+1,cost,req,sp,dp);
+        
+        return dp[req] = min(skip,take);
     }
-
-    int shoppingOffers(vector<int>& price, vector<vector<int>>& special, vector<int>& needs) 
-    {
+public:
+    int shoppingOffers(vector<int>& price, vector<vector<int>>& special, vector<int>& needs) {
+        int n = price.size();
+        
+        // vector<vector<int>> dp(n,vector<int>(11,-1));
         map<vector<int>, int> dp;
-        return MinPrice(needs, price, special, dp);
+        return solve(0,price,needs,special,dp);
+        
     }
 };
