@@ -1,0 +1,69 @@
+class Solution {
+public:
+    // int solve(int curr, int x, int y, int z, vector<vector<vector<vector<int>>>> &dp)
+    // {
+    //     // cout<<curr<<" "<<x<<" "<<y<<" "<<z<<endl;
+    //     if(dp[curr][x][y][z] != -1)   return dp[curr][x][y][z];
+    //     if(curr == 1)
+    //     {
+    //         if(y > 0)   return dp[curr][x][y][z] =  2 + solve(2, x, y-1,z,dp);
+    //         else return dp[curr][x][y][z] =  0;
+    //     }
+    //     else if(curr == 2)
+    //     {
+    //         int takex = 0, takez = 0;
+
+    //         if(x)   takex = 2 + solve(1,x-1,y,z,dp);
+    //         if(z)   takez = 2 + solve(0,x,y,z-1,dp);
+
+    //         if(x || z)  return dp[curr][x][y][z] = max(takex, takez);
+    //         else return dp[curr-1][x][y][z] = 0;
+    //     }
+    //     else
+    //     {
+    //         int takex = 0, takez = 0;
+    //         if(x)   takex =  2 + solve(1,x-1,y,z,dp);
+    //         if(z)   takez =  2 + solve(0,x,y,z-1,dp);
+    //         if(x || z)  return dp[curr][x][y][z] = max(takex,takez);
+    //         else return dp[curr][x][y][z] = 0;
+    //     }
+
+    // }
+    int longestString(int x, int y, int z) {
+        // what we need to proceed
+        // x - y
+        // y - x/z
+        // z - x/z
+
+        // int takex =0, takey = 0, takez = 0;
+
+        // vector<vector<vector<vector<int>>>> dp(3,vector<vector<vector<int>>>(51,vector<vector<int>>(51,vector<int>(51,-1))));
+        
+        // auto temp = dp;
+        // if(x>0) takex = 2 + solve(1,x-1,y,z,temp);
+        // temp = dp;
+        // if(y>0) takey = 2 + solve(2,x,y-1,z,temp);
+        // temp = dp;
+        // if(z>0) takez = 2 + solve(0,x,y,z-1,temp);
+
+        // return max({takex,takey,takez});
+
+        // ---------------------4d dp ends here with a tle----------------------------------
+        // Greedy
+
+        //lets pair all x and y together, then pair all z together
+        // also, if after pairing x or y, there is a surplus, we can use it with z so at the end its a +2
+
+        int ans = 0;
+        int k = min(x,y);
+
+        ans += (4*k);
+        x -= k;
+        y -= k;
+
+        ans += (2*z);
+
+        if(x || y)  ans += 2;
+        return ans;
+    }
+};
