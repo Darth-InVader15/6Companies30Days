@@ -1,48 +1,26 @@
 class MyQueue {
 public:
-    stack<int> stk1, stk2;
+    queue<int> q;
     MyQueue() {
-        // boomin'
+        
     }
     
     void push(int x) {
-        stk1.push(x);
+        q.push(x);
     }
     
     int pop() {
-        while(stk1.size() != 1)
-        {
-            stk2.push(stk1.top());
-            stk1.pop();
-        }
-        auto ele = stk1.top();
-        stk1.pop();
-        
-        while(!stk2.empty())
-        {
-            stk1.push(stk2.top());
-            stk2.pop();
-        }
+        auto ele = q.front();
+        q.pop();
         return ele;
     }
     
     int peek() {
-        while(!stk1.size() == 0)
-        {
-            stk2.push(stk1.top());
-            stk1.pop();
-        }
-        auto ele = stk2.top();
-        while(!stk2.empty())
-        {
-            stk1.push(stk2.top());
-            stk2.pop();
-        }
-        return ele;        
+        return q.front();
     }
     
     bool empty() {
-        return stk1.empty();
+        return q.empty();
         
     }
 };
